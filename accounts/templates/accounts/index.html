@@ -1,0 +1,172 @@
+{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="skill_matcher_app">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="language" content="English">
+    <meta name="author" content="barnabutech">
+
+    <title>SKILL MATCHER APP</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Message Handling -->
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                alert("{{ message }}");
+            </script>
+        {% endfor %}
+    {% endif %}
+</head>
+
+<body class="container-fluid {% if not user.is_authenticated %}auth-page{% endif %}">
+    <header class="row">
+        <!-- Navbar -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'index' %}">SKILL MATCHER APP</a>
+                </div>
+                <div class="collapse navbar-collapse" id="mainNavBar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        {% if user.is_authenticated %}
+                            <li>
+                                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link" style="padding: 0; color: #fff; text-decoration: underline;">
+                                        <span class="glyphicon glyphicon-log-out"></span> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span> Sign up</a></li>
+                            <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> Log in</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container" style="margin-top: 70px;"> <!-- Adjust margin to avoid navbar overlap -->
+        <div class="row">
+            {% block start %}
+                {% if user.is_authenticated %}
+                    <div class="col-md-12">
+                        <h1 class="text-center">Welcome back, {{ user.username }}!</h1>
+                    </div>
+                {% else %}
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h2 class="panel-title">Log in to continue</h2>
+                            </div>
+                            <div class="panel-body">
+                                {% block auth_content %}{% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock %}
+        </div>
+
+        {% if not user.is_authenticated %}
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <section class="hero-section" style="background: url('{% static 'images/hero_image.jpg' %}') no-repeat center center; background-size: cover; color: white; padding: 100px 0;">
+                        <h2>Find Your Dream Job</h2>
+                        <p>Skill Matcher App connects you with the perfect job based on your skills.</p>
+                        <a href="{% url 'register' %}" class="btn btn-primary">Sign Up</a>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="features-section text-center">
+                        <h2>Key Features</h2>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="{% static 'images/feature1.jpg' %}" class="img-responsive" alt="Feature 1">
+                                <h3>Skill-Based Matching</h3>
+                                <p>Discover jobs tailored to your expertise.</p>
+                            </div>
+                            <div class="col-md-4">
+                                <img src="{% static 'images/feature2.jpg' %}" class="img-responsive" alt="Feature 2">
+                                <h3>User-Friendly Interface</h3>
+                                <p>Navigate the app with ease and find jobs quickly.</p>
+                            </div>
+                            <div class="col-md-4">
+                                <img src="{% static 'images/feature3.jpg' %}" class="img-responsive" alt="Feature 3">
+                                <h3>Real-Time Notifications</h3>
+                                <p>Get updates on job openings as they happen.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="testimonials-section">
+                        <h2 class="text-center">What Our Users Say</h2>
+                        <div class="testimonial-item text-center">
+                            <img src="{% static 'images/user1.jpg' %}" class="img-circle" alt="User 1" style="width: 80px; height: 80px;">
+                            <p>"Skill Matcher App helped me land my dream job!"</p>
+                            <span>- Barnabu</span>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <section class="call-to-action-section">
+                        <h2>Ready to Get Started?</h2>
+                        <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Now</a>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="about-us-section">
+                        <h2>About Us</h2>
+                        <p>Skill Matcher App was developed to help users from informal sectors identify their skills. The app could then match them with relevant job opportunities by analyzing job postings. Linking youth to job opportunities, inclusivity, and equity.</p>
+                    </section>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="contact-section">
+                        <h2>Contact Us</h2>
+                        <p>Email: contact@skillmatcherapp.com</p>
+                    </section>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
